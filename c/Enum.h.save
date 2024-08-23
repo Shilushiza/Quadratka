@@ -1,0 +1,11 @@
+
+enum NUM_ROOTS {ZeroRoots = 0,
+                OneRoot = 1,
+                TwoRoots = 2,
+                InfinityRoots = 3};
+
+enum USER_MODE {
+    SOLVE,
+    TEST
+};
+

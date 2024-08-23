@@ -1,0 +1,172 @@
+#include <TXLib.h>
+#include <stdio.h>
+#include <math.h>
+#include <assert.h>
+#include <cmath>
+//---------------------------------------------------------------------------------------------------------------------------------------
+
+enum NUM_ROOTS {ZeroRoots = 0,
+                OneRoot = 1,
+                TwoRoots = 2,
+                InfinityRoots = 3};
+enum USER_MODE {
+    SOLVE,
+    TEST
+};
+static const double epsilon = 1e-8;
+
+NUM_ROOTS SolveEquatoin2 (double a, double b, double c, double* x1, double* x2);
+void SortingCasesSE2(NUM_ROOTS QuantityRoots, double x1, double x2);
+int ComparsionWith0(double s);
+void Input (double* a, double* b, double* c);
+void SolvesCheckerSE2();
+USER_MODE Intro();
+
+
+//---------------------------------------------------------------------------------------------------------------------------------------
+int main()
+{
+    //SolvesCheckerSE2(); // написать функцию выбора тестировки или решения
+    double a=0, b=0, c=0, x1=0, x2=0;
+    USER_MODEIntro();
+    printf ("Введите значения коэффициентов квадратного уравнения вида ax^2+bx+c=0 в следующем порядке: a, b, c\n");
+
+        Input(a, b, c);
+
+        NUM_ROOTS QuantityRoots = SolveEquatoin2(*a, *b, *c, x1, x2);
+        SortingCasesSE2(QuantityRoots, *x1, *x2);
+
+//----------------------------------------------------------------------------------------------------------------------------------------
+void Input (double* a, double* b, double* c)
+{
+    int NumInput = 0;
+    NumInput = scanf ("%lf %lf %lf", a, b, c);
+    while ((getchar()) != '\n');
+    while (NumInput != 3)
+    {
+        printf("Попробуй ещё раз\n");
+        NumInput = scanf ("%lf %lf %lf", a, b, c);
+        while ((getchar()) != '\n');
+    }
+}
+
+//-----------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+NUM_ROOTS SolveEquatoin2 (double a, double b, double c, double* x1, double* x2)
+{
+
+    assert(std::isfinite(a));//Написать свою функцию для реализации isfinite
+    assert(std::isfinite(b));
+    assert(std::isfinite(c));
+
+    int A = ComparsionWith0(a);
+    int B = ComparsionWith0(b);
+    int C = ComparsionWith0(c);
+
+    if (A == 0)
+    {
+        if (B == 0)
+        {
+            return (C == 0)?InfinityRoots : ZeroRoots;
+        }
+        else
+        {
+            *x1 = -c/b;
+            return OneRoot;
+        }
+    }
+    else
+    {
+        double d = b*b - 4*a*c;
+        int D = ComparsionWith0(d);
+        if (D == 0)
+        {
+            *x1 = *x2=-b/(2*a);
+            return OneRoot;
+        }
+        if (d>0)
+        {
+            double sqrt_d = sqrt(d);
+            *x1 = (-b-sqrt_d)/(2*a);
+            *x2 = (-b+sqrt_d)/(2*a);
+            return TwoRoots;
+        }
+        else
+        {
+            return ZeroRoots;
+        }
+    }
+}
+
+//------------------------------------------------------------------------------------------------------------------------------------------
+
+void SortingCasesSE2(NUM_ROOTS QuantityRoots, double x1, double x2)
+{
+    assert(x1 != NAN);
+    assert(x2 != NAN);
+
+    switch(QuantityRoots)
+    {
+      case ZeroRoots:
+        printf("Нет корней");
+        break;
+      case OneRoot:
+        printf("x = %lg\n", x1);
+        break;
+      case TwoRoots:
+        printf("x1 = %lg, x2 = %lg\n", x1, x2);
+        break;
+      case InfinityRoots:
+        printf("Бесконечно корней");
+        break;
+    }
+}
+
+//--------------------------------------------------------------------------------------------------------------------------------------------
+
+int ComparsionWith0(double s)
+{
+    return (((s < epsilon)&&(s > -epsilon))?0:1);
+}
+
+//-----------------------------------------------------------------------------------------------------------------
+
+void SolvesCheckerSE2()
+{
+    double x1 = 0, x2 = 0;
+    NUM_ROOTS QuantityRoots = SolveEquatoin2(1, 0, -4, &x1, &x2);
+    if (QuantityRoots != 2 || x1 != -2 || x2 != 2)
+    {
+        printf ("Ошибка теста 1: a = %lg, b = %lg, c = %lg, x1 = %lg, x2 = %lg, QuantityRoots = %lg\n"
+                "Ожидаемый ответ: x1 = %lg, x2 = %lg, QuantityRoots = %lg\n",
+                1, 0, -4, x1, x2, QuantityRoots,
+                -2, 2, 2);
+    }else
+    {
+        printf ("Тест 1 пройден\n");
+    }
+
+}
+
+//--------------------------------------------------------------------------------------------------------------------
+
+USER_MOD Intro()
+{
+    printf ("Калькулятор решения квадратных уравнений\n");
+
+    printf ("Выберите режим:\n"
+            "Введите комманду TEST, чтобы тестировать калькулятор, или комманду SOLVE, чтобы решить уравнение\n");
+    char command[6] = "";
+    scanf ("%5s", command);
+    if (command == "SOLVE")
+    {
+        return SOLVE;
+    }
+    if (command == "TEST")
+    {
+         return TEST;
+    }
+}

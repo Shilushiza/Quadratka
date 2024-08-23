@@ -1,0 +1,8 @@
+void BiblioChecker(double* x1, double* x2);
+
+bool Comparison (double k, double l);
+
+struct Unittests
+    {double k1, k2, k3;
+     double x1Correct, x2Correct,
+     NUM_ROOTS QuantityRootsCorrect};
